@@ -37,7 +37,7 @@
             },
             mounted: function () {
                 this.getSentence()
-                axios.get("http://nyamamotopy.pythonanywhere.com/gym/api/sentence")
+                axios.get("https://nyamamotopy.pythonanywhere.com/gym/api/sentence")
                     .then((res, err) => {
                         this.sentence = res.data.sentence
                         this.subject = res.data.subject
