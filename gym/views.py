@@ -55,6 +55,11 @@ def register_phrases(request):
             ),
         ]
         registered_phrases = Phrase.objects.bulk_create(phrases)
+
+        # https://django.readthedocs.io/en/stable/topics/db/examples/one_to_one.html
+        # Note that you must save an object before it can be assigned to a one-to-one relationship
+        [phrase.save() for phrase in registered_phrases]
+
         PhraseGroup.objects.create(
             base=registered_phrases[0],
             present_participle=registered_phrases[1],
