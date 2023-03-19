@@ -7,17 +7,61 @@ from .models import (
     BeVerb,
     PaVerb,
     PersonalPronoun,
+    Phrase,
     PhraseGroup,
     SentenceType,
     Subject,
     Template,
     Tense,
+    VerbForm,
 )
 
 
 def index(request):
     html = loader.get_template("gym/index.html")
     context = get_sentence()
+    return HttpResponse(html.render(context, request))
+
+
+def register_phrases(request):
+    html = loader.get_template("gym/register_phrases.html")
+    context = {"verb_form": VerbForm}
+    if len(request.GET) > 0:
+        phrases = [
+            Phrase(
+                verb_form=VerbForm.BASE,
+                english=request.GET.get("base_en"),
+                japanese=request.GET.get("base_ja"),
+            ),
+            Phrase(
+                verb_form=VerbForm.PRESENT_PARTICIPLE,
+                english=request.GET.get("prpa_en"),
+                japanese=request.GET.get("prpa_ja"),
+            ),
+            Phrase(
+                verb_form=VerbForm.PAST_SIMPLE,
+                english=request.GET.get("pasm_en"),
+                japanese=request.GET.get("pasm_ja"),
+            ),
+            Phrase(
+                verb_form=VerbForm.PAST_PARTICIPLE,
+                english=request.GET.get("papa_en"),
+                japanese=request.GET.get("papa_ja"),
+            ),
+            Phrase(
+                verb_form=VerbForm.THIRD_PERSON_SINGULAR,
+                english=request.GET.get("thps_en"),
+                japanese=request.GET.get("thps_ja"),
+            ),
+        ]
+        registered_phrases = Phrase.objects.bulk_create(phrases)
+        PhraseGroup.objects.create(
+            base=registered_phrases[0],
+            present_participle=registered_phrases[1],
+            past_simple=registered_phrases[2],
+            past_participle=registered_phrases[3],
+            third_person_singular=registered_phrases[4],
+        )
     return HttpResponse(html.render(context, request))
 
 

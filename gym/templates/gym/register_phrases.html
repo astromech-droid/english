@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym</title>
+</head>
+
+<body>
+    <h1>Register Phrase</h1>
+    <form>
+        <div>
+            {{ verb_form.BASE.label }} :<br>
+            <label>en:
+                <input type="text" name="base_en">
+            </label><br>
+            <label>ja:
+                <input type="text" name="base_ja">
+            </label>
+        </div>
+        <div>
+            {{ verb_form.PRESENT_PARTICIPLE.label }}:<br>
+            <label>en:
+                <input type="text" name="prpa_en">
+            </label><br>
+            <label>ja:
+                <input type="text" name="prpa_ja">
+            </label>
+        </div>
+        <div>
+            {{ verb_form.PAST_SIMPLE.label }}:<br>
+            <label>en:
+                <input type="text" name="pasm_en">
+            </label><br>
+            <label>ja:
+                <input type="text" name="pasm_ja">
+            </label>
+        </div>
+        <div>
+            {{ verb_form.PAST_PARTICIPLE.label }}:<br>
+            <label>en:
+                <input type="text" name="papa_en">
+            </label><br>
+            <label>ja:
+                <input type="text" name="papa_ja">
+            </label>
+        </div>
+        <div>
+            {{ verb_form.THIRD_PERSON_SINGULAR.label }}:<br>
+            <label>en:
+                <input type="text" name="thps_en">
+            </label><br>
+            <label>ja:
+                <input type="text" name="thps_ja">
+            </label>
+        </div>
+        <div>
+            <input type="submit" value="submit">
+        </div>
+    </form>
+
+</body>
+
+</html>
