@@ -10,16 +10,15 @@
 
 <body>
     <div id="app">
-        <p>時制: [[ tense ]]</p>
-        <p>主語: [[ subject ]]</p>
-        <p>種類: [[ sentence_type ]]</p>
-        <p>フレーズ: [[ phrase ]]</p>
-        <h1 v-show="show">[[ sentence ]]</h1>
+        <p>時制: {{ tense }}</p>
+        <p>主語: {{ subject }}</p>
+        <p>種類: {{ sentence_type }}</p>
+        <p>フレーズ: {{ phrase }}</p>
+        <h1 v-show="show">{{ sentence }}</h1>
         <button @click="toggle">show</button><br>
         <a href="{% url 'index' %}">next</a>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/vue@3.2.47/dist/vue.global.prod.js"></script>
 
     <script>
@@ -29,27 +28,9 @@
             data() {
                 return {
                     show: false,
-                    sentence: "No content.",
-                    subject: "No content.",
-                    sentence_type: "No content.",
-                    apiData: {},
                 }
             },
-            mounted: function () {
-                this.getSentence()
-                axios.get("https://nyamamotopy.pythonanywhere.com/gym/api/sentence")
-                    .then((res, err) => {
-                        this.sentence = res.data.sentence
-                        this.subject = res.data.subject
-                        this.sentence_type = res.data.sentence_type
-                        this.phrase = res.data.phrase
-                        this.tense = res.data.tense
-                    })
-            },
             methods: {
-                getSentence() {
-                    console.log("fire")
-                },
                 toggle() {
                     this.show = !this.show
                 }

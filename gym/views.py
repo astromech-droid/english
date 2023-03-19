@@ -1,6 +1,6 @@
 import random
 
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.template import loader
 
 from .models import (
@@ -17,11 +17,11 @@ from .models import (
 
 def index(request):
     html = loader.get_template("gym/index.html")
-    context = {}
+    context = get_sentence()
     return HttpResponse(html.render(context, request))
 
 
-def get_sentence(request):
+def get_sentence():
     subject = Subject.objects.order_by("?").first()
     personal_pronoun_txt = subject.personal_pronoun
     tense = get_random_attr(Tense)
@@ -56,7 +56,7 @@ def get_sentence(request):
         "pa-verb": paverb.text,
         "phrase": phrase_group.base.english,
     }
-    return JsonResponse(response)
+    return response
 
 
 def create_sentence(
