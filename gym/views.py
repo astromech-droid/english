@@ -7,8 +7,12 @@ from .models import (
     BeVerb,
     PaVerb,
     PersonalPronoun,
-    Phrase,
+    PhraseBase,
     PhraseGroup,
+    PhrasePastParticiple,
+    PhrasePastSimple,
+    PhrasePresentParticiple,
+    PhraseThirdPersonSingular,
     SentenceType,
     Subject,
     Template,
@@ -26,47 +30,46 @@ def index(request):
 def register_phrases(request):
     html = loader.get_template("gym/register_phrases.html")
     context = {"verb_form": VerbForm}
-    if len(request.GET) > 0:
-        phrases = [
-            Phrase(
-                verb_form=VerbForm.BASE,
-                english=request.GET.get("base_en"),
-                japanese=request.GET.get("base_ja"),
-            ),
-            Phrase(
-                verb_form=VerbForm.PRESENT_PARTICIPLE,
-                english=request.GET.get("prpa_en"),
-                japanese=request.GET.get("prpa_ja"),
-            ),
-            Phrase(
-                verb_form=VerbForm.PAST_SIMPLE,
-                english=request.GET.get("pasm_en"),
-                japanese=request.GET.get("pasm_ja"),
-            ),
-            Phrase(
-                verb_form=VerbForm.PAST_PARTICIPLE,
-                english=request.GET.get("papa_en"),
-                japanese=request.GET.get("papa_ja"),
-            ),
-            Phrase(
-                verb_form=VerbForm.THIRD_PERSON_SINGULAR,
-                english=request.GET.get("thps_en"),
-                japanese=request.GET.get("thps_ja"),
-            ),
-        ]
-        registered_phrases = Phrase.objects.bulk_create(phrases)
+    if request.method == "POST":
+        # baseと同じ文字列をPhrageGroupの名前とする
+        phrase_group = PhraseGroup(name=request.POST["base_en"])
+        phrase_group.save()
 
-        # https://django.readthedocs.io/en/stable/topics/db/examples/one_to_one.html
-        # Note that you must save an object before it can be assigned to a one-to-one relationship
-        [phrase.save() for phrase in registered_phrases]
-
-        PhraseGroup.objects.create(
-            base=registered_phrases[0],
-            present_participle=registered_phrases[1],
-            past_simple=registered_phrases[2],
-            past_participle=registered_phrases[3],
-            third_person_singular=registered_phrases[4],
+        base = PhraseBase(
+            phrase_group=phrase_group,
+            english=request.POST["base_en"],
+            japanese=request.POST["base_ja"],
         )
+        base.save()
+
+        present_participle = PhrasePresentParticiple(
+            phrase_group=phrase_group,
+            english=request.POST["prpa_en"],
+            japanese=request.POST["prpa_ja"],
+        )
+        present_participle.save()
+
+        past_simple = PhrasePastSimple(
+            phrase_group=phrase_group,
+            english=request.POST["pasm_en"],
+            japanese=request.POST["pasm_ja"],
+        )
+        past_simple.save()
+
+        past_participle = PhrasePastParticiple(
+            phrase_group=phrase_group,
+            english=request.POST["papa_en"],
+            japanese=request.POST["papa_ja"],
+        )
+        past_participle.save()
+
+        third_person_singular = PhraseThirdPersonSingular(
+            phrase_group=phrase_group,
+            english=request.POST["thps_en"],
+            japanese=request.POST["thps_ja"],
+        )
+        third_person_singular.save()
+
     return HttpResponse(html.render(context, request))
 
 

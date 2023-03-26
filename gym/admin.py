@@ -23,18 +23,34 @@ class PaVerbAdmin(admin.ModelAdmin):
     list_display = ("id", "personal_pronoun", "tense", "text")
 
 
-@admin.register(Phrase)
-class PhraseAdmin(admin.ModelAdmin):
-    list_display = ("id", "english", "japanese", "verb_form")
-
-
 @admin.register(PhraseGroup)
 class PhraseGroupAdmin(admin.ModelAdmin):
     list_display = (
         "id",
+        "name",
         "base",
         "past_simple",
-        "present_participle",
         "past_participle",
+        "present_participle",
         "third_person_singular",
     )
+
+    def base(self, object):
+        return object.base.english
+
+    def past_simple(self, object):
+        return object.past_simple
+
+    def past_participle(self, object):
+        return object.past_participle
+
+    def present_participle(self, object):
+        return object.present_participle
+
+    def third_person_singular(self, object):
+        return object.third_person_singular
+
+
+@admin.register(Phrase)
+class PhraseAdmin(admin.ModelAdmin):
+    list_display = ("id", "english", "japanese")

@@ -10,7 +10,7 @@
 
 <body>
     <h1>Register Phrase</h1>
-    <form>
+    <form method="post">{% csrf_token %}
         <div>
             {{ verb_form.BASE.label }} :<br>
             <label>en:

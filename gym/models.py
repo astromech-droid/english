@@ -56,42 +56,96 @@ class VerbForm(models.TextChoices):
     THIRD_PERSON_SINGULAR = "THPS", "三人称単数"
 
 
+class PhraseGroup(models.Model):
+    name = models.CharField(max_length=20)
+
+
 class Phrase(models.Model):
-    verb_form = models.CharField(max_length=4, choices=VerbForm.choices)
     english = models.CharField(max_length=20)
     japanese = models.CharField(max_length=20, null=True, blank=True)
+
+
+class PhraseBase(Phrase):
+    verb_form = models.CharField(
+        max_length=4, choices=VerbForm.choices, default=VerbForm.BASE, editable=False
+    )
+    phrase_group = models.OneToOneField(
+        PhraseGroup, on_delete=models.CASCADE, related_name="base"
+    )
 
     def __str__(self):
         index = VerbForm.values.index(self.verb_form)
         return f"{self.english} ({VerbForm.names[index]})"
 
 
-class PhraseGroup(models.Model):
-    base = models.OneToOneField(Phrase, on_delete=models.CASCADE, related_name="base")
-    past_simple = models.OneToOneField(
-        Phrase, on_delete=models.CASCADE, related_name="past_simple", null=True, blank=True
+class PhrasePastSimple(Phrase):
+    verb_form = models.CharField(
+        max_length=4,
+        choices=VerbForm.choices,
+        default=VerbForm.PAST_SIMPLE,
+        editable=False,
     )
-    past_participle = models.OneToOneField(
-        Phrase,
+    phrase_group = models.OneToOneField(
+        PhraseGroup, on_delete=models.CASCADE, related_name="past_simple"
+    )
+
+    def __str__(self):
+        index = VerbForm.values.index(self.verb_form)
+        return f"{self.english} ({VerbForm.names[index]})"
+
+
+class PhrasePastParticiple(Phrase):
+    verb_form = models.CharField(
+        max_length=4,
+        choices=VerbForm.choices,
+        default=VerbForm.PRESENT_PARTICIPLE,
+        editable=False,
+    )
+    phrase_group = models.OneToOneField(
+        PhraseGroup,
         on_delete=models.CASCADE,
         related_name="past_participle",
-        null=True,
-        blank=True,
     )
-    present_participle = models.OneToOneField(
-        Phrase,
+
+    def __str__(self):
+        index = VerbForm.values.index(self.verb_form)
+        return f"{self.english} ({VerbForm.names[index]})"
+
+
+class PhrasePresentParticiple(Phrase):
+    verb_form = models.CharField(
+        max_length=4,
+        choices=VerbForm.choices,
+        default=VerbForm.PRESENT_PARTICIPLE,
+        editable=False,
+    )
+    phrase_group = models.OneToOneField(
+        PhraseGroup,
         on_delete=models.CASCADE,
         related_name="present_participle",
-        null=True,
-        blank=True,
     )
-    third_person_singular = models.OneToOneField(
-        Phrase,
+
+    def __str__(self):
+        index = VerbForm.values.index(self.verb_form)
+        return f"{self.english} ({VerbForm.names[index]})"
+
+
+class PhraseThirdPersonSingular(Phrase):
+    verb_form = models.CharField(
+        max_length=4,
+        choices=VerbForm.choices,
+        default=VerbForm.THIRD_PERSON_SINGULAR,
+        editable=False,
+    )
+    phrase_group = models.OneToOneField(
+        PhraseGroup,
         on_delete=models.CASCADE,
         related_name="third_person_singular",
-        null=True,
-        blank=True,
     )
+
+    def __str__(self):
+        index = VerbForm.values.index(self.verb_form)
+        return f"{self.english} ({VerbForm.names[index]})"
 
 
 class BeVerb(models.Model):
