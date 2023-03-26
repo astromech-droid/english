@@ -6,6 +6,39 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gym</title>
+    <script src="https://unpkg.com/vue@3.2.47/dist/vue.global.prod.js"></script>
+    <style>
+        body {
+            color: white;
+            background-color: #0C4B33;
+            font-size: 200%;
+        }
+
+        .buttons {
+            position: absolute;
+            bottom: 0px;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .button-next,
+        .button-show {
+            margin: 10px;
+            font-family: inherit;
+            font-size: 100%;
+            padding: .5em 1em;
+            color: rgba(0, 0, 0, .8);
+            border: none transparent;
+            background-color: #e6e6e6;
+            text-decoration: none;
+            border-radius: 2px;
+        }
+
+        .sentence {
+            font-size: 100%;
+        }
+    </style>
 </head>
 
 <body>
@@ -14,12 +47,15 @@
         <p>主語: {{ subject }}</p>
         <p>種類: {{ sentence_type }}</p>
         <p>フレーズ: {{ phrase }}</p>
-        <h1 v-show="show">{{ sentence }}</h1>
-        <button @click="toggle">show</button><br>
-        <a href="{% url 'index' %}">next</a>
+        <hr>
+        <div>
+            <p v-show="show" class="sentence">{{ sentence }}</p>
+        </div>
+        <div class="buttons">
+            <button @click="toggle" class="button-show">show</button><br>
+            <button onclick="location.href='{% url 'index' %}'" class="button-next">next</button>
+        </div>
     </div>
-
-    <script src="https://unpkg.com/vue@3.2.47/dist/vue.global.prod.js"></script>
 
     <script>
         const { createApp } = Vue
@@ -35,9 +71,7 @@
                     this.show = !this.show
                 }
             },
-            delimiters: ["[[", "]]"]
         }).mount("#app")
-
     </script>
 </body>
 
