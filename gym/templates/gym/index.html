@@ -6,7 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gym</title>
-    <script src="https://unpkg.com/vue@3.2.47/dist/vue.global.prod.js"></script>
     <style>
         body {
             color: white;
@@ -27,52 +26,48 @@
             margin: 10px;
             font-family: inherit;
             font-size: 100%;
+            font-weight: bold;
             padding: .5em 1em;
-            color: rgba(0, 0, 0, .8);
+            color: #0C4B33;
             border: none transparent;
-            background-color: #e6e6e6;
+            background-color: white;
             text-decoration: none;
             border-radius: 2px;
         }
 
-        .sentence {
+        #sentence {
             font-size: 100%;
+            display: none;
+        }
+
+        #sentence.hide {
+            display: inline;
         }
     </style>
+    <script>
+        const toggle = () => {
+            const sentence = document.getElementById('sentence');
+            console.log("fire")
+            sentence.classList.toggle('hide');
+        }
+    </script>
 </head>
 
 <body>
-    <div id="app">
+    <div>
         <p>時制: {{ tense }}</p>
         <p>主語: {{ subject }}</p>
         <p>種類: {{ sentence_type }}</p>
         <p>フレーズ: {{ phrase }}</p>
         <hr>
         <div>
-            <p v-show="show" class="sentence">{{ sentence }}</p>
+            <p id="sentence">{{ sentence }}</p>
         </div>
         <div class="buttons">
-            <button @click="toggle" class="button-show">show</button><br>
+            <button onclick="toggle()" class="button-show">show</button><br>
             <button onclick="location.href='{% url 'index' %}'" class="button-next">next</button>
         </div>
     </div>
-
-    <script>
-        const { createApp } = Vue
-
-        createApp({
-            data() {
-                return {
-                    show: false,
-                }
-            },
-            methods: {
-                toggle() {
-                    this.show = !this.show
-                }
-            },
-        }).mount("#app")
-    </script>
 </body>
 
 </html>
