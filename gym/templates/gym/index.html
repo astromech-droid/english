@@ -1,74 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "gym/base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gym</title>
-    <style>
-        body {
-            color: white;
-            background-color: #0C4B33;
-            font-size: 200%;
-        }
-
-        .buttons {
-            position: absolute;
-            bottom: 0px;
-            display: flex;
-            justify-content: center;
-            width: 100%;
-        }
-
-        .button-next,
-        .button-show {
-            margin: 10px;
-            font-family: inherit;
-            font-size: 100%;
-            font-weight: bold;
-            padding: .5em 1em;
-            color: #0C4B33;
-            border: none transparent;
-            background-color: white;
-            text-decoration: none;
-            border-radius: 2px;
-        }
-
-        #answer {
-            font-size: 100%;
-            display: none;
-        }
-
-        #answer.hide {
-            display: inline;
-        }
-    </style>
-    <script>
-        const toggle = () => {
-            const sentence = document.getElementById('answer');
-            console.log("fire")
-            sentence.classList.toggle('hide');
-        }
-    </script>
-</head>
-
-<body>
-    <div>
-        <p>時制: {{ tense }}</p>
-        <p>主語: {{ subject }}</p>
-        <p>種類: {{ sentence_type }}</p>
-        <p>フレーズ: {{ phrase }}</p>
-        <hr>
-        <div id="answer">
-            <p>{{ sentence }}</p>
-            <p>{{ base_ja }}</p>
-        </div>
-        <div class="buttons">
-            <button onclick="toggle()" class="button-show">show</button><br>
-            <button onclick="location.href='{% url 'index' %}'" class="button-next">next</button>
-        </div>
+{% block content %}
+<style>
+    .links {
+        font-size: 180%;
+    }
+</style>
+<div>
+    <h1>Welcome!</h1>
+    <div class="links">
+        <ul>
+            <li>
+                <a href={% url 'train' %}>train</a>
+            </li>
+            <li>
+                <a href={% url 'list_phrases' %}>list_phrases</a>
+            </li>
+            <li>
+                <a href={% url 'html_register_phrases' %}>register_phrases</a>
+            </li>
+        </ul>
     </div>
-</body>
-
-</html>
+</div>
+{% endblock %}

@@ -24,6 +24,12 @@ from .models import (
 
 def index(request):
     html = loader.get_template("gym/index.html")
+    context = {}
+    return HttpResponse(html.render(context, request))
+
+
+def train(request):
+    html = loader.get_template("gym/train.html")
     context = get_sentence()
     return HttpResponse(html.render(context, request))
 
