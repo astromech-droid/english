@@ -42,6 +42,31 @@ def list_phrases(request):
     return HttpResponse(html.render(context, request))
 
 
+def list_logs(request):
+    html = loader.get_template("gym/list_logs.html")
+    logs = Log.objects.raw(
+        "SELECT \
+            id, \
+            gym_log.date, \
+            count(*) AS total_count, \
+            succeed.count AS succeed_count\
+        FROM \
+            gym_log \
+            JOIN ( \
+                SELECT date, count(*) AS count \
+                FROM gym_log \
+                WHERE result='succeed' \
+                GROUP BY date \
+            ) succeed ON gym_log.date = succeed.date \
+        GROUP BY \
+            gym_log.date \
+        ORDER BY \
+            gym_log.date DESC"
+    )
+    context = {"logs": logs}
+    return HttpResponse(html.render(context, request))
+
+
 def register_phrases(request):
     # baseと同じ文字列をPhrageGroupの名前とする
     phrase_group = PhraseGroup(name=request.POST["base_en"])
@@ -138,6 +163,7 @@ def get_sentence():
         "pa-verb": paverb.text,
         "phrase": phrase_group.base.english,
         "base_ja": phrase_group.base.japanese,
+        "id": phrase_group.id,
     }
     return response
 
@@ -186,6 +212,7 @@ def api_logging(request):
 
         pg = PhraseGroup.objects.get(id=id)
         log = Log(phrase_group=pg, result=result)
+        pg.clean()
         log.save()
 
-    return HttpResponse(status=200)
+    return HttpResponse(status=201)

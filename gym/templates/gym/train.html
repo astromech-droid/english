@@ -13,8 +13,8 @@
     </div>
     <div class="buttons">
         <button onclick="toggle()" class="button-show">show</button><br>
-        <button onclick="logging(); location.href='{% url 'train' %}'" class="button-succeed">○</button>
-        <button onclick="logging(); location.href='{% url 'train' %}'" class="button-failed">×</button>
+        <button onclick="logging('succeed')" class="button-succeed">○</button>
+        <button onclick="logging('failed')" class="button-failed">×</button>
     </div>
 </div>
 
@@ -23,8 +23,31 @@
         const sentence = document.getElementById('answer');
         sentence.classList.toggle('hide');
     }
-    const logging = () => {
-        console.log("logging ...")
+    const logging = (result) => {
+        const xhr = new XMLHttpRequest();
+        const endpoint = "{% url  "api_logging" %}";
+        const url = `${location.protocol}//${location.host}${endpoint}`;
+
+        xhr.withCredentials = true
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    const csrftoken = document.cookie.split("=")[1];
+                    const query = `${url}?phrase_group_id={{ id }}&result=${result}`
+                    xhr.open('POST', query);
+                    xhr.setRequestHeader('X-CSRFToken', csrftoken);
+                    xhr.send();
+                }
+                if (xhr.status == 201) {
+                    window.location.href = '{% url 'train' %}'
+                }
+            }
+        }
+
+        xhr.open('GET', url);
+        xhr.send();
+
     }
 </script>
 

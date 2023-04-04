@@ -1,0 +1,14 @@
+{% extends "gym/base.html" %}
+
+{% block content %}
+<h1>All Logs</h1>
+<table>
+    {% for log in logs %}
+    <tr>
+        <td>{{ log.date }}</td>
+        <td>---</td>
+        <td>{{ log.succeed_count }}/{{ log.total_count }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

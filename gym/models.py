@@ -59,6 +59,10 @@ class VerbForm(models.TextChoices):
 class PhraseGroup(models.Model):
     name = models.CharField(max_length=20)
 
+    def clean(self, *args, **kwargs):
+        if self.logs.count() > 4:
+            self.logs.first().delete()
+
 
 class Phrase(models.Model):
     english = models.CharField(max_length=20)
@@ -166,6 +170,8 @@ class Result(models.TextChoices):
 
 
 class Log(models.Model):
+    phrase_group = models.ForeignKey(
+        PhraseGroup, on_delete=models.CASCADE, related_name="logs"
+    )
     result = models.CharField(max_length=7, choices=Result.choices)
     date = models.DateField(auto_now_add=True)
-    phrase_group = models.ForeignKey(PhraseGroup, on_delete=models.CASCADE)
