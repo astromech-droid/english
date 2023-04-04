@@ -46,7 +46,7 @@
     }
     const logging = (result) => {
         const xhr = new XMLHttpRequest();
-        const endpoint = "{% url  "api_logging" %}";
+        const endpoint = "{% url 'api_logging' %}";
         const url = `${location.protocol}//${location.host}${endpoint}`;
 
         xhr.withCredentials = true
@@ -61,7 +61,7 @@
                     xhr.send();
                 }
                 if (xhr.status == 201) {
-                    window.location.href = '{% url 'train' %}'
+                    window.location.href = "{% url 'train' %}"
                 }
             }
         }
