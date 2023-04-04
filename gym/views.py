@@ -1,7 +1,8 @@
 import random
 
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template import loader
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from .models import (
     BeVerb,
@@ -28,47 +29,62 @@ def index(request):
 
 
 def register_phrases(request):
+    # baseと同じ文字列をPhrageGroupの名前とする
+    phrase_group = PhraseGroup(name=request.POST["base_en"])
+    phrase_group.save()
+
+    base = PhraseBase(
+        phrase_group=phrase_group,
+        english=request.POST["base_en"],
+        japanese=request.POST["base_ja"],
+    )
+    base.save()
+
+    present_participle = PhrasePresentParticiple(
+        phrase_group=phrase_group,
+        english=request.POST["prpa_en"],
+        japanese=request.POST["prpa_ja"],
+    )
+    present_participle.save()
+
+    past_simple = PhrasePastSimple(
+        phrase_group=phrase_group,
+        english=request.POST["pasm_en"],
+        japanese=request.POST["pasm_ja"],
+    )
+    past_simple.save()
+
+    past_participle = PhrasePastParticiple(
+        phrase_group=phrase_group,
+        english=request.POST["papa_en"],
+        japanese=request.POST["papa_ja"],
+    )
+    past_participle.save()
+
+    third_person_singular = PhraseThirdPersonSingular(
+        phrase_group=phrase_group,
+        english=request.POST["thps_en"],
+        japanese=request.POST["thps_ja"],
+    )
+    third_person_singular.save()
+
+
+@ensure_csrf_cookie
+def api_register_phrases(request):
+    if request.method == "GET":
+        return JsonResponse({})
+    if request.method == "POST":
+        request.POST = request.GET
+        register_phrases(request)
+
+    return HttpResponse(status=200)
+
+
+def html_register_phrases(request):
     html = loader.get_template("gym/register_phrases.html")
     context = {"verb_form": VerbForm}
     if request.method == "POST":
-        # baseと同じ文字列をPhrageGroupの名前とする
-        phrase_group = PhraseGroup(name=request.POST["base_en"])
-        phrase_group.save()
-
-        base = PhraseBase(
-            phrase_group=phrase_group,
-            english=request.POST["base_en"],
-            japanese=request.POST["base_ja"],
-        )
-        base.save()
-
-        present_participle = PhrasePresentParticiple(
-            phrase_group=phrase_group,
-            english=request.POST["prpa_en"],
-            japanese=request.POST["prpa_ja"],
-        )
-        present_participle.save()
-
-        past_simple = PhrasePastSimple(
-            phrase_group=phrase_group,
-            english=request.POST["pasm_en"],
-            japanese=request.POST["pasm_ja"],
-        )
-        past_simple.save()
-
-        past_participle = PhrasePastParticiple(
-            phrase_group=phrase_group,
-            english=request.POST["papa_en"],
-            japanese=request.POST["papa_ja"],
-        )
-        past_participle.save()
-
-        third_person_singular = PhraseThirdPersonSingular(
-            phrase_group=phrase_group,
-            english=request.POST["thps_en"],
-            japanese=request.POST["thps_ja"],
-        )
-        third_person_singular.save()
+        register_phrases(request)
 
     return HttpResponse(html.render(context, request))
 
