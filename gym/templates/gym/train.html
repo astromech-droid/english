@@ -34,16 +34,22 @@
         display: none;
     }
 
-    #answer.hide {
+    #answer.show {
         display: inline;
     }
 </style>
 
 <script>
     const toggle = () => {
-        const sentence = document.getElementById('answer');
-        sentence.classList.toggle('hide');
+        const answer = document.getElementById('answer');
+        answer.classList.toggle('show');
     }
+
+    const hide = () => {
+        const answer = document.getElementById('answer');
+        answer.classList.remove('show');
+    }
+
     const logging = (result) => {
         const xhr = new XMLHttpRequest();
         const endpoint = "{% url 'api_logging' %}";
@@ -51,41 +57,56 @@
 
         xhr.withCredentials = true
 
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4) {
-                if (xhr.status == 200) {
-                    const csrftoken = document.cookie.split("=")[1];
-                    const query = `${url}?phrase_group_id={{ id }}&result=${result}`
-                    xhr.open('POST', query);
-                    xhr.setRequestHeader('X-CSRFToken', csrftoken);
-                    xhr.send();
-                }
-                if (xhr.status == 201) {
-                    window.location.href = "{% url 'train' %}"
-                }
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                const csrftoken = document.cookie.split("=")[1];
+                const query = `${url}?phrase_group_id=${id}&result=${result}`
+                xhr.open('POST', query);
+                xhr.setRequestHeader('X-CSRFToken', csrftoken);
+                xhr.send();
             }
         }
-
         xhr.open('GET', url);
         xhr.send();
-
     }
+
+    const getSentence = (result) => {
+        const xhr = new XMLHttpRequest();
+        const endpoint = "{% url 'api_sentence' %}";
+        const url = `${location.protocol}//${location.host}${endpoint}`;
+        xhr.onreadystatechange = () => {
+            const data = JSON.parse(xhr.response);
+            window.document.getElementById("tense").innerHTML = data.tense;
+            window.document.getElementById("subject").innerHTML = data.subject;
+            window.document.getElementById("sentence_type").innerHTML = data.sentence_type;
+            window.document.getElementById("phrase").innerHTML = data.phrase;
+            window.document.getElementById("sentence").innerHTML = data.sentence;
+            window.document.getElementById("base_ja").innerHTML = data.base_ja;
+            id = data.id
+        }
+        xhr.open('GET', url);
+        xhr.send();
+    }
+
+    let id;
+    getSentence();
+
 </script>
 
 <div id="app">
-    <p>時制: {{ tense }}</p>
-    <p>主語: {{ subject }}</p>
-    <p>種類: {{ sentence_type }}</p>
-    <p>フレーズ: {{ phrase }}</p>
+    <p>時制: <span id="tense"></span></p>
+    <p>主語: <span id="subject"></span></p>
+    <p>種類: <span id="sentence_type"></span></p>
+    <p>フレーズ: <span id="phrase"></span></p>
     <hr>
     <div id="answer">
-        <p>{{ sentence }}</p>
-        <p>{{ base_ja }}</p>
+        <p><span id="sentence"></span></p>
+        <p><span id="base_ja"></span></p>
     </div>
     <div class="buttons">
         <button onclick="toggle()" class="button-show">show</button><br>
-        <button onclick="logging('succeed')" class="button-succeed">○</button>
-        <button onclick="logging('failed')" class="button-failed">×</button>
+        <button onclick="logging('succeed');hide();getSentence();" class="button-succeed">○</button>
+        <button onclick="logging('failed');hide();getSentence();" class="button-failed">×</button>
     </div>
 </div>
 {% endblock %}

@@ -32,7 +32,7 @@ def index(request):
 
 def train(request):
     html = loader.get_template("gym/train.html")
-    context = get_sentence()
+    context = {}
     return HttpResponse(html.render(context, request))
 
 
@@ -200,3 +200,8 @@ def api_logging(request):
         log.save()
 
     return HttpResponse(status=201)
+
+
+def api_sentence(request):
+    context = get_sentence()
+    return JsonResponse(context)
