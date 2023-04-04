@@ -123,6 +123,7 @@ def get_sentence():
         "be-verb": beverb.text,
         "pa-verb": paverb.text,
         "phrase": phrase_group.base.english,
+        "base_ja": phrase_group.base.japanese,
     }
     return response
 

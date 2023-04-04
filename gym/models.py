@@ -19,8 +19,8 @@ class Subject(models.Model):
 
 
 class Tense(models.TextChoices):
-    PRESENT_SIMPLE = "PRT_SMP", "現在"
-    PRESENT_CONTINUOUS = "PRT_CON", "現在進行"
+    PRESENT_SIMPLE = "PRT_SMP", "普段"
+    PRESENT_CONTINUOUS = "PRT_CON", "今"
     # PRESENT_PERFECT = "PRT_PFT", "現在完了"
     # PRESENT_PERFECT_CONTINUOUS = "PRT_PCN", "現在完了"
     PAST_SIMPLE = "PST_SMP", "過去"
@@ -34,9 +34,9 @@ class Tense(models.TextChoices):
 
 
 class SentenceType(models.TextChoices):
-    POSITIVE = "POS", "肯定文"
-    NEGATIVE = "NEG", "否定文"
-    QUESTION = "QUE", "疑問文"
+    POSITIVE = "POS", "肯定"
+    NEGATIVE = "NEG", "否定"
+    QUESTION = "QUE", "疑問"
 
 
 class Template(models.Model):

@@ -35,18 +35,18 @@
             border-radius: 2px;
         }
 
-        #sentence {
+        #answer {
             font-size: 100%;
             display: none;
         }
 
-        #sentence.hide {
+        #answer.hide {
             display: inline;
         }
     </style>
     <script>
         const toggle = () => {
-            const sentence = document.getElementById('sentence');
+            const sentence = document.getElementById('answer');
             console.log("fire")
             sentence.classList.toggle('hide');
         }
@@ -60,8 +60,9 @@
         <p>種類: {{ sentence_type }}</p>
         <p>フレーズ: {{ phrase }}</p>
         <hr>
-        <div>
-            <p id="sentence">{{ sentence }}</p>
+        <div id="answer">
+            <p>{{ sentence }}</p>
+            <p>{{ base_ja }}</p>
         </div>
         <div class="buttons">
             <button onclick="toggle()" class="button-show">show</button><br>
