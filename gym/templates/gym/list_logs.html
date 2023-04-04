@@ -3,11 +3,22 @@
 {% block content %}
 <h1>All Logs</h1>
 <table>
+    <style>
+        td {
+            padding-right: 10px;
+            font-size: 150%;
+        }
+    </style>
+
     {% for log in logs %}
     <tr>
-        <td>{{ log.date }}</td>
-        <td>---</td>
-        <td>{{ log.succeed_count }}/{{ log.total_count }}</td>
+        <td>{{ log.date | date:"Y/m/d"}} </td>
+        <td>{{ log.count }}</td>
+        <td>
+            {% if log.count == max %}
+            &#10024;&#129332;&#10024;
+            {% endif %}
+        </td>
     </tr>
     {% endfor %}
 </table>

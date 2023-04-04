@@ -1,5 +1,6 @@
 import random
 
+from django.db.models import Count, Max
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -44,26 +45,9 @@ def list_phrases(request):
 
 def list_logs(request):
     html = loader.get_template("gym/list_logs.html")
-    logs = Log.objects.raw(
-        "SELECT \
-            id, \
-            gym_log.date, \
-            count(*) AS total_count, \
-            succeed.count AS succeed_count\
-        FROM \
-            gym_log \
-            JOIN ( \
-                SELECT date, count(*) AS count \
-                FROM gym_log \
-                WHERE result='succeed' \
-                GROUP BY date \
-            ) succeed ON gym_log.date = succeed.date \
-        GROUP BY \
-            gym_log.date \
-        ORDER BY \
-            gym_log.date DESC"
-    )
-    context = {"logs": logs}
+    logs = Log.objects.values("date").annotate(count=Count("*")).order_by("date").reverse()
+    max = logs.aggregate(max=Max("count"))["max"]
+    context = {"logs": logs, "max": max}
     return HttpResponse(html.render(context, request))
 
 
