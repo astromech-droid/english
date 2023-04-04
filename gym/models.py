@@ -58,10 +58,20 @@ class VerbForm(models.TextChoices):
 
 class PhraseGroup(models.Model):
     name = models.CharField(max_length=20)
+    max_log_count = 5
+
+    def __str__(self):
+        return self.name
 
     def clean(self, *args, **kwargs):
-        if self.logs.count() > 4:
+        if self.logs.count() >= self.max_log_count:
             self.logs.first().delete()
+            print(self.logs)
+
+    def achievement_rate(self, *args, **kwargs):
+        succeed = self.logs.filter(result="succeed").count()
+        ar = succeed / self.max_log_count
+        return ar
 
 
 class Phrase(models.Model):

@@ -8,6 +8,12 @@
         <td>{{ forloop.counter }}</td>
         <td>{{ phrase.base.english }}</td>
         <td>{{ phrase.base.japanese }}</td>
+        <td>{{ phrase.achievement_rate }}</td>
+        <td>
+            {% if phrase.achievement_rate == 1 %}
+            &#11088;
+            {% endif %}
+        </td>
     </tr>
     {% endfor %}
 </table>
