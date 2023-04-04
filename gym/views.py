@@ -28,6 +28,13 @@ def index(request):
     return HttpResponse(html.render(context, request))
 
 
+def list_phrases(request):
+    html = loader.get_template("gym/list_phrases.html")
+    phrases = PhraseGroup.objects.all()
+    context = {"phrases": phrases}
+    return HttpResponse(html.render(context, request))
+
+
 def register_phrases(request):
     # baseと同じ文字列をPhrageGroupの名前とする
     phrase_group = PhraseGroup(name=request.POST["base_en"])
