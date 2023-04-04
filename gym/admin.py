@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import BeVerb, PaVerb, Phrase, PhraseGroup, Subject, Template
+from .models import BeVerb, Log, PaVerb, Phrase, PhraseGroup, Subject, Template
 
 
 @admin.register(Template)
@@ -54,3 +54,8 @@ class PhraseGroupAdmin(admin.ModelAdmin):
 @admin.register(Phrase)
 class PhraseAdmin(admin.ModelAdmin):
     list_display = ("id", "english", "japanese")
+
+
+@admin.register(Log)
+class LogAdmin(admin.ModelAdmin):
+    list_display = ("phrase_group", "result", "date")

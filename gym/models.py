@@ -158,3 +158,14 @@ class PaVerb(models.Model):
     personal_pronoun = models.CharField(max_length=3, choices=PersonalPronoun.choices)
     tense = models.CharField(max_length=7, choices=Tense.choices)
     text = models.CharField(max_length=5)
+
+
+class Result(models.TextChoices):
+    SUCCEED = "succeed", "成功"
+    FAILED = "failed", "失敗"
+
+
+class Log(models.Model):
+    result = models.CharField(max_length=7, choices=Result.choices)
+    date = models.DateField(auto_now_add=True)
+    phrase_group = models.ForeignKey(PhraseGroup, on_delete=models.CASCADE)

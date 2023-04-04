@@ -13,15 +13,18 @@
     </div>
     <div class="buttons">
         <button onclick="toggle()" class="button-show">show</button><br>
-        <button onclick="location.href='{% url 'train' %}'" class="button-next">next</button>
+        <button onclick="logging(); location.href='{% url 'train' %}'" class="button-succeed">○</button>
+        <button onclick="logging(); location.href='{% url 'train' %}'" class="button-failed">×</button>
     </div>
 </div>
 
 <script>
     const toggle = () => {
         const sentence = document.getElementById('answer');
-        console.log("fire")
         sentence.classList.toggle('hide');
+    }
+    const logging = () => {
+        console.log("logging ...")
     }
 </script>
 
@@ -38,8 +41,9 @@
         width: 100%;
     }
 
-    .button-next,
-    .button-show {
+    .button-show,
+    .button-succeed,
+    .button-failed {
         margin: 10px;
         font-family: inherit;
         font-size: 100%;

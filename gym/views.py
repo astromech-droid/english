@@ -6,6 +6,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 
 from .models import (
     BeVerb,
+    Log,
     PaVerb,
     PersonalPronoun,
     PhraseBase,
@@ -171,3 +172,20 @@ def get_random_attr(enum):
         "label": enum.labels[index],
     }
     return attr
+
+
+@ensure_csrf_cookie
+def api_logging(request):
+    if request.method == "GET":
+        return JsonResponse({})
+    if request.method == "POST":
+        request.POST = request.GET
+
+        id = request.POST["phrase_group_id"]
+        result = request.POST["result"]
+
+        pg = PhraseGroup.objects.get(id=id)
+        log = Log(phrase_group=pg, result=result)
+        log.save()
+
+    return HttpResponse(status=200)
