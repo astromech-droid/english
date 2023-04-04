@@ -6,29 +6,6 @@
         font-size: 180%;
     }
 
-    .buttons {
-        position: absolute;
-        bottom: 0px;
-        display: flex;
-        justify-content: center;
-        width: 100%;
-    }
-
-    .button-show,
-    .button-succeed,
-    .button-failed {
-        margin: 10px;
-        font-family: inherit;
-        font-size: 100%;
-        font-weight: bold;
-        padding: .5em 1em;
-        color: #0C4B33;
-        border: none transparent;
-        background-color: white;
-        text-decoration: none;
-        border-radius: 2px;
-    }
-
     #answer {
         font-size: 100%;
         display: none;
@@ -104,9 +81,9 @@
         <p><span id="base_ja"></span></p>
     </div>
     <div class="buttons">
-        <button onclick="toggle()" class="button-show">show</button><br>
-        <button onclick="logging('succeed');hide();getSentence();" class="button-succeed">○</button>
-        <button onclick="logging('failed');hide();getSentence();" class="button-failed">×</button>
+        <button onclick="toggle()">show</button><br>
+        <button onclick="logging('succeed');hide();getSentence();">○</button>
+        <button onclick="logging('failed');hide();getSentence();">×</button>
     </div>
 </div>
 {% endblock %}

@@ -1,54 +1,65 @@
 {% extends "gym/base.html" %}
 
 {% block content %}
+<style>
+    input[type="text"] {
+        margin: 5px;
+        font-size: 20px;
+        width: 90%;
+    }
+
+    table {
+        border-spacing: 10px;
+    }
+</style>
 <h1>Register Phrase</h1>
 <form method="post">{% csrf_token %}
-    <div>
-        {{ verb_form.BASE.label }} :<br>
-        <label>en:
-            <input type="text" name="base_en">
-        </label><br>
-        <label>ja:
-            <input type="text" name="base_ja">
-        </label>
-    </div>
-    <div>
-        {{ verb_form.PRESENT_PARTICIPLE.label }}:<br>
-        <label>en:
-            <input type="text" name="prpa_en">
-        </label><br>
-        <label>ja:
-            <input type="text" name="prpa_ja">
-        </label>
-    </div>
-    <div>
-        {{ verb_form.PAST_SIMPLE.label }}:<br>
-        <label>en:
-            <input type="text" name="pasm_en">
-        </label><br>
-        <label>ja:
-            <input type="text" name="pasm_ja">
-        </label>
-    </div>
-    <div>
-        {{ verb_form.PAST_PARTICIPLE.label }}:<br>
-        <label>en:
-            <input type="text" name="papa_en">
-        </label><br>
-        <label>ja:
-            <input type="text" name="papa_ja">
-        </label>
-    </div>
-    <div>
-        {{ verb_form.THIRD_PERSON_SINGULAR.label }}:<br>
-        <label>en:
-            <input type="text" name="thps_en">
-        </label><br>
-        <label>ja:
-            <input type="text" name="thps_ja">
-        </label>
-    </div>
-    <div>
+    <table>
+        <tr>
+            <td>{{ verb_form.BASE.label }}</td>
+            <td>
+                <input type="text" name="base_en" placeholder="English">
+                <input type="text" name="base_ja" placeholder="Japanese">
+            </td>
+        </tr>
+        <tr>
+            <td>{{ verb_form.PRESENT_PARTICIPLE.label }}</td>
+            <td>
+                <div>
+                    <input type="text" name="prpa_en" placeholder="English">
+                    <input type="text" name="prpa_ja" placeholder="Japanese">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>{{ verb_form.PAST_SIMPLE.label }}</td>
+            <td>
+                <div>
+                    <input type="text" name="pasm_en" placeholder="English">
+                    <input type="text" name="pasm_ja" placeholder="Japanese">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>{{ verb_form.PAST_PARTICIPLE.label }}</td>
+            <td>
+                <div>
+                    <input type="text" name="papa_en" placeholder="English">
+                    <input type="text" name="papa_ja" placeholder="Japanese">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>{{ verb_form.THIRD_PERSON_SINGULAR.label }}</td>
+            <td>
+                <div>
+                    <input type="text" name="thps_en" placeholder="English">
+                    <input type="text" name="thps_ja" placeholder="Japanese">
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div class="buttons">
         <input type="submit" value="submit">
     </div>
 </form>
