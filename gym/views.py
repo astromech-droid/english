@@ -1,10 +1,12 @@
 import random
+from collections import deque
 
-from django.db.models import Count, Max
+from django.db.models import Count, Max, Subquery
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from django.views.decorators.csrf import ensure_csrf_cookie
 
+from . import settings
 from .models import (
     BeVerb,
     Log,
@@ -22,6 +24,8 @@ from .models import (
     Tense,
     VerbForm,
 )
+
+QUESTION_BUFFER = deque()
 
 
 def index(request):
@@ -112,6 +116,43 @@ def html_register_phrases(request):
     return HttpResponse(html.render(context, request))
 
 
+def buffer_questions():
+    # [優先度1] ログの個数が少ないもの
+    subquery = (
+        PhraseGroup.objects.values("id")
+        .annotate(count=Count("logs"))
+        .order_by("count")[: settings.QUESTION_BUFFER_LENGTH]
+    )
+
+    # ログの個数がすべてのフレーズで最大数に達していたら...
+    if subquery[0]["count"] == settings.MAX_LOG_COUNT:
+        # [優先度2]正解のログの個数が少ないもの
+        subquery = (
+            Log.objects.filter(result="succeed")
+            .values("phrase_group")
+            .annotate(count=Count("*"))
+            .order_by("count")[: settings.QUESTION_BUFFER_LENGTH]
+        )
+
+    phrase_groups = PhraseGroup.objects.filter(id__in=Subquery(subquery.values("id")))
+
+    for pg in phrase_groups:
+        QUESTION_BUFFER.append(pg)
+
+
+def get_phrase_group():
+    if len(QUESTION_BUFFER) > 0:
+        return QUESTION_BUFFER.popleft()
+
+    else:
+        buffer_questions()
+        return QUESTION_BUFFER.popleft()
+
+    # DEBUG
+    # print(subquery)
+    # print(phrase_group)
+
+
 def get_sentence():
     subject = Subject.objects.order_by("?").first()
     personal_pronoun_txt = subject.personal_pronoun
@@ -126,8 +167,8 @@ def get_sentence():
     paverb = PaVerb.objects.get(
         tense=tense["value"], personal_pronoun=personal_pronoun_txt
     )
+    phrase_group = get_phrase_group()
 
-    phrase_group = PhraseGroup.objects.order_by("?").first()
     sentence = create_sentence(
         template.text,
         subject.text,
