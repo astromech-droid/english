@@ -56,43 +56,43 @@ def list_logs(request):
     return HttpResponse(html.render(context, request))
 
 
-def register_phrases(request):
+def register_phrases(data):
     # baseと同じ文字列をPhrageGroupの名前とする
-    phrase_group = PhraseGroup(name=request.POST["base_en"])
+    phrase_group = PhraseGroup(name=data["base_en"])
     phrase_group.save()
 
     base = PhraseBase(
         phrase_group=phrase_group,
-        english=request.POST["base_en"],
-        japanese=request.POST["base_ja"],
+        english=data["base_en"],
+        japanese=data["base_ja"],
     )
     base.save()
 
     present_participle = PhrasePresentParticiple(
         phrase_group=phrase_group,
-        english=request.POST["prpa_en"],
-        japanese=request.POST["prpa_ja"],
+        english=data["prpa_en"],
+        japanese=data["prpa_ja"],
     )
     present_participle.save()
 
     past_simple = PhrasePastSimple(
         phrase_group=phrase_group,
-        english=request.POST["pasm_en"],
-        japanese=request.POST["pasm_ja"],
+        english=data["pasm_en"],
+        japanese=data["pasm_ja"],
     )
     past_simple.save()
 
     past_participle = PhrasePastParticiple(
         phrase_group=phrase_group,
-        english=request.POST["papa_en"],
-        japanese=request.POST["papa_ja"],
+        english=data["papa_en"],
+        japanese=data["papa_ja"],
     )
     past_participle.save()
 
     third_person_singular = PhraseThirdPersonSingular(
         phrase_group=phrase_group,
-        english=request.POST["thps_en"],
-        japanese=request.POST["thps_ja"],
+        english=data["thps_en"],
+        japanese=data["thps_ja"],
     )
     third_person_singular.save()
 
@@ -101,9 +101,10 @@ def register_phrases(request):
 def api_register_phrases(request):
     if request.method == "GET":
         return JsonResponse({})
+
     if request.method == "POST":
-        request.POST = request.GET
-        register_phrases(request)
+        data = json.loads(request.body)
+        register_phrases(data)
 
     return HttpResponse(status=200)
 
@@ -112,7 +113,7 @@ def html_register_phrases(request):
     html = loader.get_template("gym/register_phrases.html")
     context = {"verb_form": VerbForm}
     if request.method == "POST":
-        register_phrases(request)
+        register_phrases(request.POST)
 
     return HttpResponse(html.render(context, request))
 
