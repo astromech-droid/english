@@ -27,24 +27,24 @@
         answer.classList.remove('show');
     }
 
+    const getCsrftoken = () => {
+        const csrftoken = document.cookie.split("=")[1];
+        return csrftoken
+    }
+
     const logging = (result) => {
-        const xhr = new XMLHttpRequest();
         const endpoint = "{% url 'api_logging' %}";
         const url = `${location.protocol}//${location.host}${endpoint}`;
+        const query = `${url}?phrase_group_id=${id}&result=${result}`
+        const csrftoken = getCsrftoken()
 
-        xhr.withCredentials = true
-
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                const csrftoken = document.cookie.split("=")[1];
-                const query = `${url}?phrase_group_id=${id}&result=${result}`
-                xhr.open('POST', query);
-                xhr.setRequestHeader('X-CSRFToken', csrftoken);
-                xhr.send();
+        fetch(query, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrftoken
             }
-        }
-        xhr.open('GET', url);
-        xhr.send();
+        })
+            .then(data => console.log(data))
     }
 
     const getSentence = (result) => {
