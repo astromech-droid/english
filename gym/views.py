@@ -1,3 +1,4 @@
+import json
 import random
 from collections import deque
 
@@ -229,18 +230,18 @@ def get_random_attr(enum):
 def api_logging(request):
     if request.method == "GET":
         return JsonResponse({})
+
     if request.method == "POST":
         request.POST = request.GET
+        data = json.loads(request.body)
 
-        id = request.POST["phrase_group_id"]
-        result = request.POST["result"]
+        pg = PhraseGroup.objects.get(id=data["phrase_group_id"])
+        log = Log(phrase_group=pg, result=data["result"])
 
-        pg = PhraseGroup.objects.get(id=id)
-        log = Log(phrase_group=pg, result=result)
         pg.clean()
         log.save()
 
-    return HttpResponse(status=201)
+        return HttpResponse(status=201)
 
 
 def api_sentence(request):

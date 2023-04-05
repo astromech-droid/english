@@ -50,14 +50,18 @@
     const logging = async (result) => {
         const endpoint = "{% url 'api_logging' %}";
         const url = `${location.protocol}//${location.host}${endpoint}`;
-        const query = `${url}?phrase_group_id=${id}&result=${result}`;
         const csrftoken = await getCsrftoken(url);
+        const data = {
+            phrase_group_id: id,
+            result: result
+        }
 
-        fetch(query, {
+        fetch(url, {
             method: "POST",
             headers: {
                 "X-CSRFToken": csrftoken
-            }
+            },
+            body: JSON.stringify(data)
         })
             .then(data => {
                 if (data.status == 201) {
