@@ -23,25 +23,24 @@ python manage.py dumpdata gym -o dump/dump.json
 ```python
 import requests
 
+url = "https://nyamamotopy.pythonanywhre.com/gym/api/phrases/register"
+
 session = requests.session()
-session.get(url)  # get csrftoken
+csrftoken = session.get(url).cookies["csrftoken"]
 
-csrftoken = session.cookies["csrftoken"]
+data = {
+    "base_en": "test",
+    "prpa_en": "testing",
+    "pasm_en": "tested",
+    "papa_en": "tested",
+    "thps_en": "tests",
+    "base_ja": "テスト",
+    "prpa_ja": "",
+    "pasm_ja": "",
+    "papa_ja": "",
+    "thps_ja": "",
+}
+
 headers = {"X-CSRFToken": csrftoken}
-
-url = "http://nyamamotopy.pythonanywhere.com/gym/api/phrases/register \
-    ?base_en=test \
-    &prpa_en=testing \
-    &pasm_en=tested \
-    &papa_en=tested \
-    &thps_en=tests \
-    &base_ja=テスト\
-    &prpa_ja \
-    &pasm_ja \
-    &papa_ja \
-    &thps_ja
-    "
-
-session.post(url=url, headers=headers)
-
+response = session.post(url, json=data, headers=headers)
 ```
