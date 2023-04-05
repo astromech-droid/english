@@ -1,5 +1,7 @@
 from django.db import models
 
+from . import settings
+
 
 class PersonalPronoun(models.TextChoices):
     FIRST_PERSON_SINGULAR = "FPS", "一人称単数"
@@ -58,19 +60,17 @@ class VerbForm(models.TextChoices):
 
 class PhraseGroup(models.Model):
     name = models.CharField(max_length=20)
-    max_log_count = 5
 
     def __str__(self):
         return self.name
 
     def clean(self, *args, **kwargs):
-        if self.logs.count() >= self.max_log_count:
+        if self.logs.count() >= settings.MAX_LOG_COUNT:
             self.logs.first().delete()
-            print(self.logs)
 
     def achievement_rate(self, *args, **kwargs):
         succeed = self.logs.filter(result="succeed").count()
-        ar = succeed / self.max_log_count
+        ar = succeed / settings.MAX_LOG_COUNT
         return ar
 
 

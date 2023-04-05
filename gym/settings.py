@@ -1,0 +1,1 @@
+MAX_LOG_COUNT = 5
