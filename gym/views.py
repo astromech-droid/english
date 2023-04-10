@@ -48,15 +48,6 @@ def phrase_training(request):
     return HttpResponse(html.render(context, request))
 
 
-"""
-def list_phrases(request):
-    html = loader.get_template("gym/list_phrases.html")
-    phrases = PhraseGroup.objects.all()
-    context = {"phrases": phrases}
-    return HttpResponse(html.render(context, request))
-"""
-
-
 def list_phrases(request):
     html = loader.get_template("gym/list_phrases.html")
     phrases = PhraseGroup.objects.all()
