@@ -2,6 +2,7 @@ import json
 import random
 from collections import deque
 
+from django.core.paginator import Paginator
 from django.db.models import Count, Max, Subquery
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
@@ -47,10 +48,22 @@ def phrase_training(request):
     return HttpResponse(html.render(context, request))
 
 
+"""
 def list_phrases(request):
     html = loader.get_template("gym/list_phrases.html")
     phrases = PhraseGroup.objects.all()
     context = {"phrases": phrases}
+    return HttpResponse(html.render(context, request))
+"""
+
+
+def list_phrases(request):
+    html = loader.get_template("gym/list_phrases.html")
+    phrases = PhraseGroup.objects.all()
+    pagenator = Paginator(phrases, 25)
+    page_number = request.GET.get("page")
+    page_obj = pagenator.get_page(page_number)
+    context = {"page_obj": page_obj}
     return HttpResponse(html.render(context, request))
 
 
