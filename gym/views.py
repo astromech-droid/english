@@ -50,7 +50,7 @@ def phrase_training(request):
 
 def list_phrases(request):
     html = loader.get_template("gym/list_phrases.html")
-    phrases = PhraseGroup.objects.all()
+    phrases = PhraseGroup.objects.all().order_by("id").reverse()
     pagenator = Paginator(phrases, settings.LIST_PHRASE_PER_PAGE)
     page_number = request.GET.get("page")
     page_obj = pagenator.get_page(page_number)
