@@ -11,7 +11,12 @@
     <div class="links">
         <ul>
             <li>
-                <a href={% url 'train' %}>train</a>
+                <span>training</span>
+                <ul>
+                    <li>
+                        <a href={% url 'template_training' %}>template</a>
+                    </li>
+                </ul>
             </li>
             <li>
                 <a href={% url 'list_phrases' %}>list_phrases</a>
