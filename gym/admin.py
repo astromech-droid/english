@@ -28,6 +28,7 @@ class PhraseGroupAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "name",
+        "active",
         "base",
         "past_simple",
         "past_participle",

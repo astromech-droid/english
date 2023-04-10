@@ -3,7 +3,7 @@ import random
 from collections import deque
 
 from django.core.paginator import Paginator
-from django.db.models import Count, Max, Subquery
+from django.db.models import Count, F, Max, Subquery
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -131,22 +131,23 @@ def html_register_phrases(request):
 def buffer_questions():
     # [優先度1] ログの個数が少ないもの
     subquery = (
-        PhraseGroup.objects.values("id")
+        PhraseGroup.objects.filter(active=True)
+        .values("id")
         .annotate(count=Count("logs"))
         .order_by("count")[: settings.QUESTION_BUFFER_LENGTH]
-    )
+    ).annotate(pg_id=F("id"))
 
     # ログの個数がすべてのフレーズで最大数に達していたら...
     if subquery[0]["count"] == settings.MAX_LOG_COUNT:
         # [優先度2]正解のログの個数が少ないもの
         subquery = (
-            Log.objects.filter(result="succeed")
+            Log.objects.filter(result="succeed", phrase_group__active=True)
             .values("phrase_group")
             .annotate(count=Count("*"))
             .order_by("count")[: settings.QUESTION_BUFFER_LENGTH]
-        )
+        ).annotate(pg_id=F("phrase_group__id"))
 
-    phrase_groups = PhraseGroup.objects.filter(id__in=Subquery(subquery.values("id")))
+    phrase_groups = PhraseGroup.objects.filter(id__in=Subquery(subquery.values("pg_id")))
 
     for pg in phrase_groups:
         QUESTION_BUFFER.append(pg)
