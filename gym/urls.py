@@ -10,6 +10,7 @@ urlpatterns = [
     path("logs", views.list_logs, name="list_logs"),
     path("phrases/register", views.html_register_phrases, name="html_register_phrases"),
     path("api/phrases/register", views.api_register_phrases, name="api_register_phrases"),
+    path("api/phrases/toggle", views.api_toggle_phrases, name="api_toggle_phrases"),
     path("api/phrases/logging", views.api_logging, name="api_logging"),
     path("api/sentence/", views.api_sentence, name="api_sentence"),
 ]

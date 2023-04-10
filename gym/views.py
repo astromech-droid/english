@@ -66,6 +66,13 @@ def list_logs(request):
     return HttpResponse(html.render(context, request))
 
 
+def toggle_phrases(data):
+    phrase_group = PhraseGroup.objects.get(id=data["id"])
+    phrase_group.active = not phrase_group.active
+    phrase_group.save()
+    return phrase_group.active
+
+
 def register_phrases(data):
     # baseと同じ文字列をPhrageGroupの名前とする
     phrase_group = PhraseGroup(name=data["base_en"])
@@ -117,6 +124,18 @@ def api_register_phrases(request):
         register_phrases(data)
 
     return HttpResponse(status=200)
+
+
+@ensure_csrf_cookie
+def api_toggle_phrases(request):
+    if request.method == "GET":
+        return JsonResponse({})
+
+    if request.method == "POST":
+        data = json.loads(request.body)
+        toggle_phrases(data)
+
+    return HttpResponse(status=201)
 
 
 def html_register_phrases(request):

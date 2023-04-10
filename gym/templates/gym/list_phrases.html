@@ -1,6 +1,30 @@
 {% extends "gym/base.html" %}
 
 {% block content %}
+<script>
+    const toggle = async (id) => {
+        const endpoint = "{% url 'api_toggle_phrases' %}";
+        const url = `${location.protocol}//${location.host}${endpoint}`;
+        const csrftoken = await getCsrftoken(url);
+        const data = {
+            id: id
+        }
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrftoken
+            },
+            body: JSON.stringify(data)
+        })
+            .then(data => {
+                if (data.status == 201) {
+                    const element = document.getElementById(id)
+                    console.log(element.checked)
+                };
+            });
+    }
+</script>
 <h1>All Phrases</h1>
 <div>
     <table>
@@ -8,7 +32,8 @@
         <tr>
             <td>{{ phrase.base.english }}</td>
             <td>{{ phrase.base.japanese }}</td>
-            <td>{{ phrase.active }}</td>
+            <td><input type="checkbox" onchange="toggle({{phrase.id}})" id="{{phrase.id}}"
+                    {{phrase.active|yesno:"checked,"}}></td>
             <!--<td>{{ phrase.achievement_rate }}</td>-->
             <td>
                 {% if phrase.achievement_rate == 1 %}

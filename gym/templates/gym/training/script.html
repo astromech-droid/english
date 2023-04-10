@@ -9,26 +9,6 @@
         answer.classList.remove('show');
     }
 
-    const getCookie = (name) => {
-        if (document.cookie && document.cookie !== '') {
-            for (const cookie of document.cookie.split(';')) {
-                const [key, value] = cookie.trim().split('=')
-                if (key === name) {
-                    return decodeURIComponent(value)
-                }
-            }
-        }
-    }
-
-    const getCsrftoken = async (url) => {
-        let csrftoken = getCookie("csrftoken")
-        if (csrftoken == undefined) {
-            await fetch(url)
-            csrftoken = getCookie("csrftoken");
-        }
-        return csrftoken
-    }
-
     const logging = async (result) => {
         const endpoint = "{% url 'api_logging' %}";
         const url = `${location.protocol}//${location.host}${endpoint}`;
