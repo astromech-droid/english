@@ -36,7 +36,13 @@ def index(request):
 
 
 def template_training(request):
-    html = loader.get_template("gym/template_training.html")
+    html = loader.get_template("gym/training/template_training.html")
+    context = {}
+    return HttpResponse(html.render(context, request))
+
+
+def phrase_training(request):
+    html = loader.get_template("gym/training/phrase_training.html")
     context = {}
     return HttpResponse(html.render(context, request))
 

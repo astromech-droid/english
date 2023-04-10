@@ -1,21 +1,3 @@
-{% extends "gym/base.html" %}
-
-{% block content %}
-<style>
-    #app {
-        font-size: 180%;
-    }
-
-    #answer {
-        font-size: 100%;
-        display: none;
-    }
-
-    #answer.show {
-        display: inline;
-    }
-</style>
-
 <script>
     const toggle = () => {
         const answer = document.getElementById('answer');
@@ -71,6 +53,13 @@
             });
     };
 
+    const innerHTML = (id, htmlText) => {
+        const element = window.document.getElementById(id)
+        if (element != null) {
+            element.innerHTML = htmlText
+        }
+    }
+
     const getSentence = () => {
         const xhr = new XMLHttpRequest();
         const endpoint = "{% url 'api_sentence' %}";
@@ -78,12 +67,12 @@
         fetch(url)
             .then(response => response.json())
             .then(data => {
-                window.document.getElementById("tense").innerHTML = data.tense;
-                window.document.getElementById("subject").innerHTML = data.subject;
-                window.document.getElementById("sentence_type").innerHTML = data.sentence_type;
-                window.document.getElementById("phrase").innerHTML = data.phrase;
-                window.document.getElementById("sentence").innerHTML = data.sentence;
-                window.document.getElementById("base_ja").innerHTML = data.base_ja;
+                innerHTML("tense", data.tense)
+                innerHTML("subject", data.subject)
+                innerHTML("sentence_type", data.sentence_type)
+                innerHTML("phrase", data.phrase)
+                innerHTML("sentence", data.sentence)
+                innerHTML("base_ja", data.base_ja)
                 id = data.id
             });
     };
@@ -92,21 +81,3 @@
     getSentence();
 
 </script>
-
-<div id="app">
-    <p>時制: <span id="tense"></span></p>
-    <p>主語: <span id="subject"></span></p>
-    <p>種類: <span id="sentence_type"></span></p>
-    <p>フレーズ: <span id="phrase"></span></p>
-    <hr>
-    <div id="answer">
-        <p><span id="sentence"></span></p>
-        <p><span id="base_ja"></span></p>
-    </div>
-    <div class="buttons">
-        <button onclick="toggle()">show</button><br>
-        <button onclick="logging('succeed')">○</button>
-        <button onclick="logging('failed')">×</button>
-    </div>
-</div>
-{% endblock %}

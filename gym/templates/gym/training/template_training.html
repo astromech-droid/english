@@ -1,0 +1,23 @@
+{% extends "gym/base.html" %}
+
+{% block content %}
+{% include "gym/training/style.html" %}
+{% include "gym/training/script.html" %}
+
+<div id="app">
+    <p>時制: <span id="tense"></span></p>
+    <p>主語: <span id="subject"></span></p>
+    <p>種類: <span id="sentence_type"></span></p>
+    <p>フレーズ: <span id="phrase"></span></p>
+    <hr>
+    <div id="answer">
+        <p><span id="sentence"></span></p>
+        <p><span id="base_ja"></span></p>
+    </div>
+    <div class="buttons">
+        <button onclick="toggle()">show</button><br>
+        <button onclick="logging('succeed')">○</button>
+        <button onclick="logging('failed')">×</button>
+    </div>
+</div>
+{% endblock %}
